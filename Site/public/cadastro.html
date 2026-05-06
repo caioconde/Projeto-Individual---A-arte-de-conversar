@@ -69,6 +69,11 @@
             <span>Confirmação da Senha:</span>
             <input id="confirmacao_senha_input" type="password" placeholder="******" />
           </div>
+
+          <div>
+            <b>Já possui uma conta?</b><a href="login.html"> Entrar</a>
+          </div>
+
           <button class="botao" onclick="cadastrar()">Cadastrar</button>
         </div>
         <div id="div_aguardar" class="loading-div">
@@ -93,9 +98,9 @@
 </html>
 
 <script>
-  let caracteres = ['!', '@', '$', '%', '&', '*', '?', '/']
+  let caracteres = ['!', '@', '$', '%', '&', '*', '?', '/', '_']
   let numeros = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
-  
+
   function cadastrar() {
 
     var nomeVar = nome_input.value;
@@ -118,21 +123,21 @@
     let temNumero = false;
     let temEspecial = false;
 
-for (let i = 0; i < senhaVar.length; i++) {
-  let c = senhaVar[i];
+    for (let i = 0; i < senhaVar.length; i++) {
+      let c = senhaVar[i];
 
-  if (numeros.includes(Number(c))) {
-    temNumero = true;
-  }
+      if (numeros.includes(Number(c))) {
+        temNumero = true;
+      }
 
-  if (caracteres.includes(c)) {
-    temEspecial = true;
-  }
-}
+      if (caracteres.includes(c)) {
+        temEspecial = true;
+      }
+    }
     if (senhaVar.length < 8) {
       mensagem_erro.innerHTML = "A senha deve ter no mínimo 8 caracteres";
       return false;
-    } else if(!temNumero) {
+    } else if (!temNumero) {
       mensagem_erro.innerHTML = "A senha precisa ter um número";
       return false;
     } else if (!temEspecial) {
@@ -153,7 +158,6 @@ for (let i = 0; i < senhaVar.length; i++) {
         nomeServer: nomeVar,
         emailServer: emailVar,
         senhaServer: senhaVar,
-        idEmpresaVincularServer: idEmpresaVincular
       }),
     })
       .then(function (resposta) {
