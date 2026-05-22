@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Arte de Conversar | Quiz</title>
+
+  <script src="../js/sessao.js"></script>
+
+  <link rel="stylesheet" href="../css/estilo.css">
+  <link rel="stylesheet" href="../css/quiz.css">
+  <link rel="icon" href="../assets/icon/icone.png">
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body onload="onloadEsconder()">
+
+  <div class="header">
+    <div class="container">
+
+      <h1 class="titulo">Arte de Conversar</h1>
+
+      <ul class="navbarQuiz">
+
+        <li>
+          <a href="../livro.html">Livro</a>
+        </li>
+        <li>|</li>
+        <li class="agora">
+          <a href="#">Quiz</a>
+        </li>
+        <li>|</li>
+        <li>
+          <a href="../index.html">Sair</a>
+        </li>
+
+      </ul>
+
+    </div>
+  </div>
+
+  <div class="base">
+    <div class="area">
+      <div class="card">
+
+        <h1 class="titulo">
+          Descubra suas Competências
+        </h1>
+
+        <button class="botao botaoIniciar" id="btnIniciarQuiz" onclick="iniciarQuiz()">INICIAR QUIZ</button>
+
+        <div id="jogo">
+          <div class="info">
+            <span>
+              Questão atual:
+              <span id="spanNumeroDaQuestaoAtual"></span>
+              a
+              <span id="qtdQuestoes"></span>
+            </span>
+          </div>
+
+          <div class="pergunta">
+            <h2 id="spanQuestaoExibida"></h2>
+          </div>
+
+          <div class="alternativasInfo">
+            <span>
+              <em>Escolha uma opção:</em>
+            </span>
+          </div>
+
+          <div class="opcoes">
+            <label class="opcao">
+              <input type="radio" id="primeiraOpcao" name="option" value="alternativaA">
+              <span id="labelOpcaoUm"></span>
+            </label>
+
+            <label class="opcao">
+              <input type="radio" id="segundaOpcao" name="option" value="alternativaB">
+              <span id="labelOpcaoDois"></span>
+            </label>
+
+            <label class="opcao">
+              <input type="radio" id="terceiraOpcao" name="option" value="alternativaC">
+              <span id="labelOpcaoTres"></span>
+            </label>
+
+            <label class="opcao">
+              <input type="radio" id="quartaOpcao" name="option" value="alternativaD">
+              <span id="labelOpcaoQuatro"></span>
+            </label>
+          </div>
+
+          <div class="botoes">
+            <button class="botao" onclick="submeter()" id="btnSubmeter">Confirmar Alternativa</button>
+            <button class="botao" onclick="avancar()" id="btnProx" disabled>Próxima Pergunta</button>
+          </div>
+        </div>
+
+        <div class="resultado" id="resultadoFinal">
+          <h2>Resultado Final</h2>
+          <p class="msg" id="msgFinal"></p>
+
+          <div class="grafico">
+            <canvas id="myChart"></canvas>
+          </div> 
+            <button class="botao" onclick="tentarNovamente()" id="btnTentarNovamente">TentarNovamente</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="container">
+      <h4>
+        Feito com amor pelo aluno Caio Conde &hearts; SPTech &copy; 2026
+      </h4>
+    </div>
+  </div>
+</body>
+
+</html>
+
+<script>
+
+  const listaDeQuestoes = [
+
+    {
+      pergunta: "1. Durante uma conversa importante, uma pessoa percebe que o outro está olhando o celular e interrompendo várias vezes. O que esse comportamento demonstra?",
+
+      competencia: "comunicacao",
+
+      alternativaA: "Atenção dividida durante o diálogo",
+      valorA: 2,
+
+      alternativaB: "Falta de escuta e presença genuína",
+      valorB: 3,
+
+      alternativaC: "Participação superficial na conversa",
+      valorC: 1,
+
+      alternativaD: "Dificuldade em manter foco contínuo",
+      valorD: 0
+    },
+
+    {
+      pergunta: "2. Um profissional domina totalmente o conteúdo de sua apresentação, mas o público continua distante e pouco envolvido. O que provavelmente está faltando?",
+
+      competencia: "comunicacao",
+
+      alternativaA: "Conexão emocional e engajamento com as pessoas",
+      valorA: 3,
+
+      alternativaB: "Estratégias mais dinâmicas de comunicação",
+      valorB: 1,
+
+      alternativaC: "Maior equilíbrio entre técnica e interação",
+      valorC: 0,
+
+      alternativaD: "Adaptação da comunicação ao público",
+      valorD: 2
+    },
+
+    // {
+    //   pergunta: "3. Durante uma discussão, uma pessoa passa mais tempo pensando na resposta do que ouvindo o outro lado. Qual consequência isso pode gerar?",
+
+    //   competencia: "comunicacao",
+
+    //   alternativaA: "Redução da qualidade do diálogo",
+    //   valorA: 1,
+
+    //   alternativaB: "Dificuldade em compreender diferentes perspectivas",
+    //   valorB: 3,
+
+    //   alternativaC: "Comunicação menos equilibrada",
+    //   valorC: 0,
+
+    //   alternativaD: "Escuta limitada durante a conversa",
+    //   valorD: 2
+    // },
+
+    // {
+    //   pergunta: "4. Uma pessoa costuma “vencer” debates facilmente, mas percebe que os relacionamentos estão se tornando mais frios. O que isso sugere?",
+
+    //   competencia: "comunicacao",
+
+    //   alternativaA: "Pouca atenção ao impacto emocional das conversas",
+    //   valorA: 1,
+
+    //   alternativaB: "Excesso de foco em argumentos e convencimento",
+    //   valorB: 2,
+
+    //   alternativaC: "Dificuldade em criar proximidade emocional",
+    //   valorC: 3,
+
+    //   alternativaD: "Comunicação excessivamente racional",
+    //   valorD: 0
+    // },
+
+    // {
+    //   pergunta: "5. Em um trabalho em equipe, um integrante comete um erro importante. Qual atitude demonstra uma liderança mais positiva?",
+
+    //   competencia: "lideranca",
+
+    //   alternativaA: "Resolver a situação sem envolver o grupo",
+    //   valorA: 2,
+
+    //   alternativaB: "Priorizar o resultado acima da relação",
+    //   valorB: 0,
+
+    //   alternativaC: "Conversar, orientar e buscar desenvolvimento",
+    //   valorC: 3,
+
+    //   alternativaD: "Corrigir o erro de maneira mais rígida",
+    //   valorD: 1
+    // },
+
+    // {
+    //   pergunta: "6. Um líder precisa corrigir alguém sem desmotivar a equipe. Qual abordagem tende a trazer melhores resultados?",
+
+    //   competencia: "lideranca",
+
+    //   alternativaA: "Distanciamento emocional para evitar conflitos",
+    //   valorA: 0,
+
+    //   alternativaB: "Comunicação firme, mas pouco acolhedora",
+    //   valorB: 1,
+
+    //   alternativaC: "Respeito aliado ao desenvolvimento da pessoa",
+    //   valorC: 3,
+
+    //   alternativaD: "Correção focada apenas no desempenho",
+    //   valorD: 2
+    // },
+
+    // {
+    //   pergunta: "7. Em equipes muito unidas, algumas pessoas influenciam naturalmente o grupo sem impor autoridade. Isso geralmente acontece porque elas:",
+
+    //   competencia: "lideranca",
+
+    //   alternativaA: "Conseguem manter controle sobre o grupo",
+    //   valorA: 0,
+
+    //   alternativaB: "Demonstram segurança nas atitudes",
+    //   valorB: 2,
+
+    //   alternativaC: "Geram confiança, coerência e credibilidade",
+    //   valorC: 3,
+
+    //   alternativaD: "Possuem forte capacidade técnica",
+    //   valorD: 1
+    // },
+
+    // {
+    //   pergunta: "8. Um líder toma decisões rápidas sem ouvir opiniões diferentes para transmitir mais segurança. Qual efeito isso pode causar?",
+
+    //   competencia: "lideranca",
+
+    //   alternativaA: "Dificuldade em fortalecer o trabalho em grupo",
+    //   valorA: 2,
+
+    //   alternativaB: "Perda gradual de confiança e colaboração",
+    //   valorB: 3,
+
+    //   alternativaC: "Redução da participação da equipe",
+    //   valorC: 1,
+
+    //   alternativaD: "Menor envolvimento nas decisões coletivas",
+    //   valorD: 0
+    // },
+
+    // {
+    //   pergunta: "9. Um amigo desabafa sobre um problema difícil e você tenta compreender como ele está se sentindo. O que essa atitude demonstra?",
+
+    //   competencia: "empatia",
+
+    //   alternativaA: "Sensibilidade diante das emoções do outro",
+    //   valorA: 2,
+
+    //   alternativaB: "Empatia e compreensão emocional",
+    //   valorB: 3,
+
+    //   alternativaC: "Apoio emocional durante a conversa",
+    //   valorC: 1,
+
+    //   alternativaD: "Interesse verdadeiro pela situação",
+    //   valorD: 0
+    // },
+
+    // {
+    //   pergunta: "10. Durante um conflito, uma pessoa tenta resolver tudo rapidamente sem perceber o estado emocional do outro. O que isso pode causar?",
+
+    //   competencia: "empatia",
+
+    //   alternativaA: "Comunicação emocional limitada",
+    //   valorA: 1,
+
+    //   alternativaB: "Sentimento de não ser compreendido",
+    //   valorB: 3,
+
+    //   alternativaC: "Sensação de distanciamento na conversa",
+    //   valorC: 2,
+
+    //   alternativaD: "Dificuldade em criar conexão emocional",
+    //   valorD: 0
+    // },
+
+    // {
+    //   pergunta: "11. Alguém reage de maneira defensiva após receber uma crítica simples. Qual interpretação demonstra mais empatia?",
+
+    //   competencia: "empatia",
+
+    //   alternativaA: "Evitar julgamentos imediatos sobre a atitude",
+    //   valorA: 0,
+
+    //   alternativaB: "Considerar fatores emocionais da situação",
+    //   valorB: 2,
+
+    //   alternativaC: "Perceber possíveis inseguranças envolvidas",
+    //   valorC: 3,
+
+    //   alternativaD: "Buscar compreender a reação emocional",
+    //   valorD: 1
+    // },
+
+    // {
+    //   pergunta: "12. Em uma conversa, quando alguém se sente realmente ouvido e compreendido, isso normalmente gera:",
+
+    //   competencia: "empatia",
+
+    //   alternativaA: "Fortalecimento da conexão interpessoal",
+    //   valorA: 2,
+
+    //   alternativaB: "Confiança e valorização na relação",
+    //   valorB: 3,
+
+    //   alternativaC: "Maior abertura emocional",
+    //   valorC: 1,
+
+    //   alternativaD: "Sensação de acolhimento e atenção",
+    //   valorD: 0
+    // },
+
+    // {
+    //   pergunta: "13. Ao conhecer pessoas novas, alguém demonstra interesse genuíno pelas histórias e opiniões delas. Qual resultado isso tende a gerar?",
+
+    //   competencia: "relacionamento",
+
+    //   alternativaA: "Relações mais leves e positivas",
+    //   valorA: 1,
+
+    //   alternativaB: "Ambiente mais confortável para interação",
+    //   valorB: 2,
+
+    //   alternativaC: "Maior facilidade para criar conexões",
+    //   valorC: 3,
+
+    //   alternativaD: "Aproximação social mais natural",
+    //   valorD: 0
+    // },
+
+    // {
+    //   pergunta: "14. Em uma amizade de muitos anos, o que normalmente fortalece a confiança entre as pessoas?",
+
+    //   competencia: "relacionamento",
+
+    //   alternativaA: "Transparência durante as interações",
+    //   valorA: 2,
+
+    //   alternativaB: "Coerência entre atitudes e palavras",
+    //   valorB: 3,
+
+    //   alternativaC: "Relações construídas com estabilidade",
+    //   valorC: 1,
+
+    //   alternativaD: "Presença constante na convivência",
+    //   valorD: 0
+    // },
+
+    // {
+    //   pergunta: "15. Uma pessoa corrige pequenos erros dos outros o tempo inteiro, mesmo sem necessidade. Com o tempo, isso tende a causar:",
+
+    //   competencia: "relacionamento",
+
+    //   alternativaA: "Sensação frequente de desconforto",
+    //   valorA: 0,
+
+    //   alternativaB: "Distanciamento emocional entre as pessoas",
+    //   valorB: 2,
+
+    //   alternativaC: "Enfraquecimento dos relacionamentos",
+    //   valorC: 3,
+
+    //   alternativaD: "Desgaste gradual nas interações",
+    //   valorD: 1
+    // },
+
+    // {
+    //   pergunta: "16. Algumas pessoas conseguem ser bem recebidas em praticamente qualquer ambiente social. Isso geralmente acontece porque elas:",
+
+    //   competencia: "relacionamento",
+
+    //   alternativaA: "Transmitem simpatia e receptividade",
+    //   valorA: 2,
+
+    //   alternativaB: "Demonstram facilidade em interagir",
+    //   valorB: 0,
+
+    //   alternativaC: "Criam um ambiente social agradável",
+    //   valorC: 1,
+
+    //   alternativaD: "Fazem os outros se sentirem valorizados",
+    //   valorD: 3
+    // },
+
+    // {
+    //   pergunta: "17. Durante uma discussão, uma pessoa sente muita raiva, mas decide respirar antes de responder. O que isso demonstra?",
+
+    //   competencia: "inteligenciaEmocional",
+
+    //   alternativaA: "Inteligência emocional e autocontrole",
+    //   valorA: 3,
+
+    //   alternativaB: "Capacidade de equilibrar emoções",
+    //   valorB: 2,
+
+    //   alternativaC: "Controle emocional diante da situação",
+    //   valorC: 0,
+
+    //   alternativaD: "Consciência emocional durante conflitos",
+    //   valorD: 1
+    // },
+
+    // {
+    //   pergunta: "18. Uma pessoa recebe uma crítica injusta na frente de outras pessoas, mas consegue responder com equilíbrio. Isso demonstra:",
+
+    //   competencia: "inteligenciaEmocional",
+
+    //   alternativaA: "Estabilidade emocional durante conflitos",
+    //   valorA: 1,
+
+    //   alternativaB: "Maturidade diante de críticas",
+    //   valorB: 2,
+
+    //   alternativaC: "Controle emocional em situações difíceis",
+    //   valorC: 3,
+
+    //   alternativaD: "Capacidade de lidar com pressão",
+    //   valorD: 0
+    // },
+
+    // {
+    //   pergunta: "19. Durante um conflito, alguém admite o próprio erro sem transformar a conversa em disputa. O que isso demonstra?",
+
+    //   competencia: "inteligenciaEmocional",
+
+    //   alternativaA: "Segurança para reconhecer falhas",
+    //   valorA: 2,
+
+    //   alternativaB: "Capacidade de lidar com críticas",
+    //   valorB: 0,
+
+    //   alternativaC: "Maturidade emocional e equilíbrio",
+    //   valorC: 3,
+
+    //   alternativaD: "Responsabilidade emocional",
+    //   valorD: 1
+    // },
+
+    // {
+    //   pergunta: "20. Pessoas emocionalmente inteligentes costumam tomar decisões melhores porque conseguem:",
+
+    //   competencia: "inteligenciaEmocional",
+
+    //   alternativaA: "Refletir antes de agir emocionalmente",
+    //   valorA: 2,
+
+    //   alternativaB: "Separar impulso emocional da decisão racional",
+    //   valorB: 3,
+
+    //   alternativaC: "Controlar emoções em momentos difíceis",
+    //   valorC: 0,
+
+    //   alternativaD: "Manter equilíbrio entre emoção e razão",
+    //   valorD: 1
+    // }
+
+  ]
+
+  let numeroDaQuestaoAtual = 0
+
+  let quantidadeDeQuestoes = listaDeQuestoes.length
+  let comunicacao = 0;
+  let lideranca = 0;
+  let empatia = 0;
+  let relacionamento = 0;
+  let inteligenciaEmocional = 0;
+
+
+  function onloadEsconder() {
+
+    document.getElementById("jogo").style.display = "none"
+    document.getElementById("resultadoFinal").style.display = "none"
+
+  }
+
+  function iniciarQuiz() {
+
+    document.getElementById("btnIniciarQuiz").style.display = "none"
+    document.getElementById("jogo").style.display = "block"
+    document.getElementById("qtdQuestoes").innerHTML = quantidadeDeQuestoes
+    preencherHTMLcomQuestaoAtual(0)
+  }
+
+  function preencherHTMLcomQuestaoAtual(index) {
+    const questaoAtual = listaDeQuestoes[index]
+    numeroDaQuestaoAtual = index
+    document.getElementById("spanNumeroDaQuestaoAtual").innerHTML = Number(index) + 1
+    document.getElementById("spanQuestaoExibida").innerHTML = questaoAtual.pergunta
+    document.getElementById("labelOpcaoUm").innerHTML = questaoAtual.alternativaA
+    document.getElementById("labelOpcaoDois").innerHTML = questaoAtual.alternativaB
+    document.getElementById("labelOpcaoTres").innerHTML = questaoAtual.alternativaC
+    document.getElementById("labelOpcaoQuatro").innerHTML = questaoAtual.alternativaD
+  }
+
+  function submeter() {
+    const options = document.getElementsByName("option")
+    let hasChecked = false
+
+    for (let i = 0; i < options.length; i++) {
+      if (options[i].checked) {
+        hasChecked = true
+        break
+      }
+    }
+
+    if (!hasChecked) {
+      alert("Escolha uma alternativa.")
+    } else {
+      btnSubmeter.disabled = true
+      btnProx.disabled = false
+      checarResposta()
+    }
+  }
+
+  function avancar() {
+
+    btnProx.disabled = true
+    btnSubmeter.disabled = false
+    desmarcarRadioButtons()
+    if (numeroDaQuestaoAtual <= quantidadeDeQuestoes - 1) {
+      preencherHTMLcomQuestaoAtual(numeroDaQuestaoAtual)
+    } else {
+      finalizarJogo()
+    }
+  }
+
+  function tentarNovamente() {
+    window.location.reload()
+  }
+
+  function checarResposta() {
+    const questaoAtual = listaDeQuestoes[numeroDaQuestaoAtual]
+    const options = document.getElementsByName("option")
+
+    for (let i = 0; i < options.length; i++) {
+
+      if (options[i].checked) {
+        let valor = 0
+
+        if (options[i].value == "alternativaA") {
+
+          valor = questaoAtual.valorA
+        } else if (options[i].value == "alternativaB") {
+
+          valor = questaoAtual.valorB
+        } else if (options[i].value == "alternativaC") {
+
+          valor = questaoAtual.valorC
+        } else if (options[i].value == "alternativaD") {
+
+          valor = questaoAtual.valorD
+        }
+
+        if (questaoAtual.competencia == "comunicacao") {
+
+          comunicacao += valor
+        } else if (questaoAtual.competencia == "lideranca") {
+
+          lideranca += valor
+        } else if (questaoAtual.competencia == "empatia") {
+
+          empatia += valor
+        } else if (questaoAtual.competencia == "relacionamento") {
+
+          relacionamento += valor
+        } else if (questaoAtual.competencia == "inteligenciaEmocional") {
+
+          inteligenciaEmocional += valor
+        }
+
+        numeroDaQuestaoAtual++
+      }
+    }
+  }
+
+  function desmarcarRadioButtons() {
+
+    const options = document.getElementsByName("option")
+
+    for (let i = 0; i < options.length; i++) {
+
+      options[i].checked = false
+    }
+  } 
+
+  function finalizarJogo() {
+
+    document.getElementById("jogo").style.display = "none"
+
+    document.getElementById("resultadoFinal").style.display = "block"
+
+    let maiorCompetencia = ""
+    let maiorValor = 0
+
+    if (comunicacao > maiorValor) {
+
+      maiorValor = comunicacao
+      maiorCompetencia = "Comunicação"
+
+    }
+
+    if (lideranca > maiorValor) {
+
+      maiorValor = lideranca
+      maiorCompetencia = "Liderança"
+
+    }
+
+    if (empatia > maiorValor) {
+
+      maiorValor = empatia
+      maiorCompetencia = "Empatia"
+
+    }
+
+    if (relacionamento > maiorValor) {
+
+      maiorValor = relacionamento
+      maiorCompetencia = "Relacionamento"
+
+    }
+
+    if (inteligenciaEmocional > maiorValor) {
+
+      maiorValor = inteligenciaEmocional
+      maiorCompetencia = "Inteligência Emocional"
+
+    }
+
+    let somaTotal = comunicacao + lideranca + empatia + relacionamento + inteligenciaEmocional;
+    let mensagemFinal = ""
+
+    if (somaTotal <= 25) {
+
+      mensagemFinal =
+        `Sua competência mais forte foi: ${maiorCompetencia}
+    <br><br>Ponto de partida! Você fez ${somaTotal} de 60 pontos.`
+    } else if (somaTotal <= 45) {
+
+      mensagemFinal =
+        `Sua competência mais forte foi: ${maiorCompetencia}
+    <br><br>No caminho certo! Você fez ${somaTotal} de 60 pontos.`
+    } else {
+
+      mensagemFinal =
+        `Sua competência mais forte foi: ${maiorCompetencia}
+    <br><br>Parabéns! Excelente desempenho com ${somaTotal} de 60 pontos.`
+    }
+
+    document.getElementById("msgFinal").innerHTML = mensagemFinal
+
+    fetch("/quiz/salvarResultado", {
+
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json"
+      },
+
+      body: JSON.stringify({
+
+        fkUsuario: sessionStorage.ID_USUARIO,
+        comunicacao: comunicacao,
+        lideranca: lideranca,
+        empatia: empatia,
+        relacionamento: relacionamento,
+        inteligenciaEmocional: inteligenciaEmocional
+      })
+
+    })
+      .then(function (resposta) {
+
+        if (resposta.ok) {
+
+          console.log("Resultado salvo com sucesso!")
+
+        } else {
+
+          console.log("Erro ao salvar resultado!")
+
+        }
+
+      })
+      .catch(function (erro) {
+
+        console.log("Erro ao salvar resultado:", erro)
+
+      })
+
+    criarGrafico()
+
+  }
+
+  function criarGrafico() {
+
+    let comunicacaoPct =
+      (comunicacao / 12) * 100
+
+    let liderancaPct =
+      (lideranca / 12) * 100
+
+    let empatiaPct =
+      (empatia / 12) * 100
+
+    let relacionamentoPct =
+      (relacionamento / 12) * 100
+
+    let inteligenciaEmocionalPct =
+      (inteligenciaEmocional / 12) * 100
+
+    let comp = document.getElementById('myChart')
+
+    new Chart(comp, {
+
+      type: 'radar',
+
+      data: {
+
+        labels: [
+
+          'Comunicação',
+          'Liderança',
+          'Empatia',
+          'Relacionamento',
+          'Inteligência Emocional'
+
+        ],
+
+        datasets: [{
+
+          label: 'Seu Perfil (%)',
+
+          data: [
+
+            comunicacaoPct,
+            liderancaPct,
+            empatiaPct,
+            relacionamentoPct,
+            inteligenciaEmocionalPct
+
+          ],
+
+          fill: true,
+
+          backgroundColor: 'rgba(166, 123, 79, 0.2)',
+
+          borderColor: '#a67b4f',
+
+          pointBackgroundColor: '#a67b4f'
+
+        }]
+
+      },
+
+      options: {
+
+        responsive: true,
+
+        scales: {
+
+          r: {
+
+            min: 0,
+            max: 100,
+
+            ticks: {
+
+              stepSize: 20
+
+            }
+
+          }
+
+        }
+
+      }
+
+    })
+
+  }
+</script>

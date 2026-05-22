@@ -1,0 +1,95 @@
+ .agora {
+     font-weight: 800;
+ }
+
+ .containerComp {
+     display: flex;
+     width: 90%;
+     margin: auto;
+ }
+
+ .header .containerComp {
+  align-items: center;
+  height: 100%;
+  gap: 40px;
+}   
+
+ .navbarComp {
+     width: 1100px;
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     list-style: none;
+     color: #9b794c;
+     font-size: 18px;
+     gap: 85px;
+ }
+
+ .navEsquerda {
+     display: flex;
+     gap: 8px;
+    margin-right: 20px;
+ }
+
+ .navDireita {
+     display: flex;
+     gap: 8px;
+     margin-left: auto;
+ }
+
+ .tituloComp {
+     color: #9b794c;
+     width: fit-content;
+     font-weight: 500;
+     margin-left: 20px;
+ }
+
+ --------------------------------------------------- 
+ 
+ 
+ .base {
+     padding: 60px 20px;
+ }
+
+ .competencias {
+     max-width: 900px;
+     margin: auto;
+     line-height: 1.7;
+ }
+
+ .competencias h1 {
+     margin-bottom: 20px;
+     font-size: 36px;
+ }
+
+ .competencias h2 {
+     margin-top: 40px;
+     margin-bottom: 15px;
+     font-size: 24px;
+ }
+
+ .competencias p {
+     margin-bottom: 20px;
+     text-align: justify;
+ }
+
+ .bloco {
+     margin-bottom: 30px;
+ }
+
+ .destaque {
+     background: rgba(0, 0, 0, 0.05);
+     padding: 15px;
+     border-left: 4px solid #6a5acd;
+     margin: 25px 0;
+     border-radius: 8px;
+ }
+
+ .lista-topicos {
+     list-style-type: disc;
+     padding-left: 20px;
+ }
+
+ .lista-topicos li {
+     margin-bottom: 8px;
+ }

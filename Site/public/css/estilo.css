@@ -8,6 +8,10 @@ body {
   background-color: #FFF8DC;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 :root {
   --tamanho-header: 100px;
   --tamanho-banner: calc(100vh - var(--tamanho-header) - var(--tamanho-footer) - 2px);
@@ -53,14 +57,16 @@ body {
   justify-content: space-between;
   list-style: none;
   color: #9b794c;
-  font-size: 19px;
+  font-size: 18px;
   gap: 8px;
 }
+
+
 
 .titulo {
   color: #9b794c;
   width: fit-content;
-  font-weight: 500; 
+  font-weight: 500;
   /* font-weight: 600;  */
 }
 
@@ -87,7 +93,6 @@ body {
 
 .banner .container p {
   font-weight: bold;
-  /* background-color: #FFF8DC; */
   margin: 200px;
   font-size: 38px;
 }
