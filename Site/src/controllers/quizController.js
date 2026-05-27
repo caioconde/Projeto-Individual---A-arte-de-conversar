@@ -1,6 +1,6 @@
 let quizModel = require("../models/quizModel");
 
-async function salvarResultado(req, res) {
+function salvarResultado(req, res) {
 
     let fkUsuario = req.body.fkUsuario;
 
@@ -10,31 +10,38 @@ async function salvarResultado(req, res) {
     let relacionamento = req.body.relacionamento;
     let inteligenciaEmocional = req.body.inteligenciaEmocional;
 
-    try {
-
-        let resultadoQuiz = await quizModel.criarQuiz(fkUsuario);
-
-        let idQuiz = resultadoQuiz.insertId;
-
-        await quizModel.salvarResultado(comunicacao, idQuiz, 1);
-
-        await quizModel.salvarResultado(lideranca, idQuiz, 2);
-
-        await quizModel.salvarResultado(empatia, idQuiz, 3);
-
-        await quizModel.salvarResultado(relacionamento, idQuiz, 4);
-
-        await quizModel.salvarResultado(inteligenciaEmocional, idQuiz, 5);
-
-        res.status(200).json({
-            mensagem: "Resultado salvo com sucesso"
+    if (fkUsuario == undefined) {
+        res.status(400).json({
+            mensagem: "fkUsuario está undefined"
         });
+    } else {
 
-    } catch (erro) {
+        quizModel.criarQuiz(fkUsuario)
+            .then(function (resultadoQuiz) {
 
-        console.log(erro);
+                let idQuiz = resultadoQuiz.insertId;
 
-        res.status(500).json(erro);
+                quizModel.salvarResultado(comunicacao, idQuiz, 1);
+
+                quizModel.salvarResultado(lideranca, idQuiz, 2);
+
+                quizModel.salvarResultado(empatia, idQuiz, 3);
+
+                quizModel.salvarResultado(relacionamento, idQuiz, 4);
+
+                quizModel.salvarResultado(inteligenciaEmocional, idQuiz, 5);
+
+                res.status(200).json({
+                    mensagem: "Resultado salvo com sucesso"
+                });
+
+            }).catch(function (erro) {
+
+                console.log(erro);
+
+                res.status(500).json(erro);
+
+            });
     }
 }
 

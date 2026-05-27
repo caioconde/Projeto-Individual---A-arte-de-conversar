@@ -1,8 +1,8 @@
-let database = require("../database/config");
+var database = require("../database/config");
 
 function criarQuiz(fkUsuario) {
 
-    let instrucaoSql = `
+    var instrucaoSql = `
         INSERT INTO quiz (fkUsuario)
         VALUES (${fkUsuario});
     `;
@@ -12,7 +12,7 @@ function criarQuiz(fkUsuario) {
 
 function salvarResultado(pontuacao, fkQuiz, fkCompetencia) {
 
-    let instrucaoSql = `
+    var instrucaoSql = `
         INSERT INTO resultadoCompetencia
         (pontuacao, fkQuiz, fkCompetencia)
         VALUES

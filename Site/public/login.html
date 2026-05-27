@@ -17,9 +17,6 @@
 </head>
 
 <body>
-
-    <!--Header-->
-
     <div class="header">
         <div class="container">
             <h1 class="titulo">Arte de Conversar</h1>
@@ -77,13 +74,13 @@
         </div>
     </div>
 
-    <!--footer inicio-->
-    <div class="footer">
-        <div class="container">
-            <h4>Feito com amor por aluno &hearts; SPTech &copy; 2023</h4>
-        </div>
+  <div class="footer">
+    <div class="container">
+      <h4>
+        Feito com carinho pelo aluno Caio Conde &diamondsuit; SPTech 2026
+      </h4>
     </div>
-    <!--footer fim-->
+  </div>
 
 </body>
 
@@ -91,7 +88,6 @@
 
 <script>
     function entrar() {
-        aguardar();
 
         var emailVar = email_input.value;
         var senhaVar = senha_input.value;
@@ -101,8 +97,7 @@
             mensagem_erro.innerHTML = "Preencha todos os campos!";
             finalizarAguardar();
             return false;
-        }
-        else {
+        }else {
             setInterval(sumirMensagem, 5000)
         }
 
@@ -135,7 +130,7 @@
 
                     setTimeout(function () {
                         window.location = "/livro.html";
-                    }, 1000); // apenas para exibir o loading
+                    }, 1000);
 
                 });
 

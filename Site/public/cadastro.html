@@ -11,12 +11,11 @@
   <script src="./js/sessao.js"></script>
 
   <link rel="stylesheet" href="./css/estilo.css" />
-  <link rel="icon" href="./assets/icon/favicon2.ico" />
+  <link rel="icon" href="./assets/icon/icone.png" />
   <link rel="preconnect" href="https://fonts.gstatic.com" />
 </head>
 
-<body onload="listar()">
-  <!--header inicio-->
+<body>
   <div class="header">
     <div class="container">
       <h1 class="titulo">Arte de Conversar</h1>
@@ -37,7 +36,6 @@
       </ul>
     </div>
   </div>
-  <!--header fim-->
 
   <div class="login">
     <div class="alerta_erro">
@@ -85,13 +83,11 @@
     </div>
   </div>
 
-  <!--footer inicio-->
   <div class="footer">
     <div class="container">
-      <h4>Feito com amor por aluno &hearts; SPTech &copy; 2023</h4>
+      <h4>Feito com carinho pelo aluno Caio Conde &diamondsuit; SPTech 2026</h4>
     </div>
   </div>
-  <!--footer fim-->
 </body>
 
 </html>
@@ -105,47 +101,47 @@
     var emailVar = email_input.value;
     var senhaVar = senha_input.value;
     var confirmacaoSenhaVar = confirmacao_senha_input.value;
-    var idEmpresaVincular
 
+
+
+    let temNumero = false;
+
+    for (let i = 0; i < senhaVar.length; i++) {
+      let j = senhaVar[i];
+
+      if (numeros.includes(Number(j))) {
+        temNumero = true;
+      }
+    }
+
+    
     if (
       nomeVar == "" ||
       emailVar == "" ||
       senhaVar == "" ||
-      confirmacaoSenhaVar == ""
-    ) {
-      cardErro.style.display = "block";
+      confirmacaoSenhaVar == "") {
+        cardErro.style.display = "block";
       mensagem_erro.innerHTML = "Preencha todos os campos!";
       return false;
-    }
-
-    let temNumero = false;
-    let temEspecial = false;
-
-    for (let i = 0; i < senhaVar.length; i++) {
-      let c = senhaVar[i];
-
-      if (numeros.includes(Number(c))) {
-        temNumero = true;
-      }
-
-      if (caracteres.includes(c)) {
-        temEspecial = true;
-      }
-    }
-    if (senhaVar.length < 8) {
+    } else if (senhaVar.length < 8) {
+      cardErro.style.display = "block";
       mensagem_erro.innerHTML = "A senha deve ter no mínimo 8 caracteres";
       return false;
     } else if (!temNumero) {
+      cardErro.style.display = "block";
       mensagem_erro.innerHTML = "A senha precisa ter um número";
       return false;
-    } else if (!temEspecial) {
-      mensagem_erro.innerHTML = "A senha precisa ter um caractere especial";
-      return false;
     } else if (senhaVar != confirmacaoSenhaVar) {
+      cardErro.style.display = "block";
       mensagem_erro.innerHTML = "As senhas não coincidem";
       return false;
     }
-
+    
+    if (!emailVar.includes("@")) {
+      mensagem_erro.innerHTML = "O email precisa ter @";
+      return false;
+    }
+    
 
     fetch("/usuarios/cadastrar", {
       method: "POST",

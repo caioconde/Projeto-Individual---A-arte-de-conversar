@@ -7,7 +7,6 @@ comandos para mysql server
 */
 
 CREATE DATABASE arteConversar;
-
 USE arteConversar;
 
 CREATE TABLE usuario(
@@ -17,14 +16,31 @@ email VARCHAR(150),
 senha VARCHAR (250)
 );
 
-select * from usuario;	
+CREATE TABLE competencia (
+idCompetencia INT PRIMARY KEY AUTO_INCREMENT,
+nome VARCHAR(100)
+);
 
-CREATE TABLE quiz(
+CREATE TABLE quiz (
 idQuiz INT PRIMARY KEY AUTO_INCREMENT,
-tempo DATETIME
+dataQuiz DATETIME DEFAULT CURRENT_TIMESTAMP,
+fkUsuario INT,
+FOREIGN KEY (fkUsuario)REFERENCES usuario(idUsuario)
 );
 
-CREATE TABLE pergunta(
-idPergunta INT PRIMARY KEY AUTO_INCREMENT,
-resposta
+CREATE TABLE resultadoCompetencia (
+idResultado INT PRIMARY KEY AUTO_INCREMENT,
+pontuacao INT,
+fkQuiz INT,
+fkCompetencia INT,
+FOREIGN KEY (fkQuiz) REFERENCES quiz(idQuiz),
+FOREIGN KEY (fkCompetencia) REFERENCES competencia(idCompetencia)
 );
+
+INSERT INTO competencia(nome) VALUES
+('Comunicação'),
+('Liderança'),
+('Empatia'),
+('Relacionamento'),
+('Inteligência Emocional');
+
