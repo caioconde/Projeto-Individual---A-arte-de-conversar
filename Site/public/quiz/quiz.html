@@ -573,33 +573,24 @@
         let valor = 0
 
         if (options[i].value == "alternativaA") {
-
           valor = questaoAtual.valorA
         } else if (options[i].value == "alternativaB") {
-
           valor = questaoAtual.valorB
         } else if (options[i].value == "alternativaC") {
-
           valor = questaoAtual.valorC
         } else if (options[i].value == "alternativaD") {
-
           valor = questaoAtual.valorD
         }
 
         if (questaoAtual.competencia == "comunicacao") {
-
           comunicacao += valor
         } else if (questaoAtual.competencia == "lideranca") {
-
           lideranca += valor
         } else if (questaoAtual.competencia == "empatia") {
-
           empatia += valor
         } else if (questaoAtual.competencia == "relacionamento") {
-
           relacionamento += valor
         } else if (questaoAtual.competencia == "inteligenciaEmocional") {
-
           inteligenciaEmocional += valor
         }
 
@@ -613,7 +604,6 @@
     const options = document.getElementsByName("option")
 
     for (let i = 0; i < options.length; i++) {
-
       options[i].checked = false
     }
   }
@@ -621,45 +611,33 @@
   function finalizarJogo() {
 
     document.getElementById("jogo").style.display = "none"
-
     document.getElementById("resultadoFinal").style.display = "block"
 
     let maiorCompetencia = ""
     let maiorValor = 0
 
     if (comunicacao > maiorValor) {
-
       maiorValor = comunicacao
       maiorCompetencia = "Comunicação"
-
     }
 
     if (lideranca > maiorValor) {
-
       maiorValor = lideranca
       maiorCompetencia = "Liderança"
-
     }
 
     if (empatia > maiorValor) {
-
       maiorValor = empatia
       maiorCompetencia = "Empatia"
-
     }
 
     if (relacionamento > maiorValor) {
-
       maiorValor = relacionamento
       maiorCompetencia = "Relacionamento"
-
     }
-
     if (inteligenciaEmocional > maiorValor) {
-
       maiorValor = inteligenciaEmocional
       maiorCompetencia = "Inteligência Emocional"
-
     }
 
     let somaTotal = comunicacao + lideranca + empatia + relacionamento + inteligenciaEmocional;
@@ -685,15 +663,12 @@
     document.getElementById("msgFinal").innerHTML = mensagemFinal
 
     fetch("/quiz/salvarResultado", {
-
       method: "POST",
-
       headers: {
         "Content-Type": "application/json"
       },
 
       body: JSON.stringify({
-
         fkUsuario: sessionStorage.ID_USUARIO,
         comunicacao: comunicacao,
         lideranca: lideranca,
@@ -706,111 +681,134 @@
       .then(function (resposta) {
 
         if (resposta.ok) {
-
+          console.log(resposta)
           console.log("Resultado salvo com sucesso!")
-
+          setTimeout(() => {
+            buscarResultado()
+          }, 500)
         } else {
-
           console.log("Erro ao salvar resultado!")
-
         }
 
       })
       .catch(function (erro) {
-
         console.log("Erro ao salvar resultado:", erro)
-
       })
-
-    criarGrafico()
 
   }
 
-  function criarGrafico() {
+  function buscarResultado() {
+    let fkUsuario = sessionStorage.ID_USUARIO;
 
-    let comunicacaoPct =
-      (comunicacao / 12) * 100
+    fetch(`/quiz/buscarResultado/${fkUsuario}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
 
-    let liderancaPct =
-      (lideranca / 12) * 100
+      .then(function (resposta) {
+        if (resposta.ok) {
+          return resposta.json();
+        } else {
+          console.log("Erro ao buscar resultado!");
+        }
+      })
 
-    let empatiaPct =
-      (empatia / 12) * 100
+      .then(function (dados) {
+        console.log(dados);
+        criarGrafico(dados);
+      })
 
-    let relacionamentoPct =
-      (relacionamento / 12) * 100
+      .catch(function (erro) {
+        console.log("Erro ao buscar resultado:", erro);
+      });
 
-    let inteligenciaEmocionalPct =
-      (inteligenciaEmocional / 12) * 100
+  }
+  function criarGrafico(dados) {
 
-    let comp = document.getElementById('myChart')
+    let comunicacao = 0;
+    let lideranca = 0;
+    let empatia = 0;
+    let relacionamento = 0;
+    let inteligenciaEmocional = 0;
+
+    for (let i = 0; i < dados.length; i++) {
+
+      let nome = dados[i].nome;
+      let pontuacao = dados[i].pontuacao;
+
+      if (nome == "Comunicação") {
+        comunicacao = pontuacao;
+      } else if (nome == "Liderança") {
+        lideranca = pontuacao;
+      } else if (nome == "Empatia") {
+        empatia = pontuacao;
+      } else if (nome == "Relacionamento") {
+        relacionamento = pontuacao;
+      } else if (nome == "Inteligência Emocional") {
+        inteligenciaEmocional = pontuacao;
+      }
+    }
+
+    let comunicacaoPct = (comunicacao / 12) * 100;
+    let liderancaPct = (lideranca / 12) * 100;
+    let empatiaPct = (empatia / 12) * 100;
+    let relacionamentoPct = (relacionamento / 12) * 100;
+    let inteligenciaEmocionalPct = (inteligenciaEmocional / 12) * 100;
+
+    let comp = document.getElementById('myChart');
 
     new Chart(comp, {
-
       type: 'radar',
 
       data: {
 
         labels: [
-
           'Comunicação',
           'Liderança',
           'Empatia',
           'Relacionamento',
           'Inteligência Emocional'
-
         ],
 
         datasets: [{
-
           label: 'Seu Perfil (%)',
 
           data: [
-
             comunicacaoPct,
             liderancaPct,
             empatiaPct,
             relacionamentoPct,
             inteligenciaEmocionalPct
-
           ],
 
           fill: true,
-
-          backgroundColor: 'rgba(166, 123, 79, 0.2)',
-
-          borderColor: '#a67b4f',
-
-          pointBackgroundColor: '#a67b4f'
-
+          backgroundColor:
+            'rgba(166, 123, 79, 0.2)',
+          borderColor:
+            '#a67b4f',
+          pointBackgroundColor:
+            '#a67b4f'
         }]
-
       },
 
       options: {
-
         responsive: true,
 
         scales: {
 
           r: {
-
             min: 0,
-            max: 100,
+            max: 100.0,
 
             ticks: {
-
               stepSize: 20
 
             }
-
           }
-
         }
-
       }
-
-    })
-
+    });
   }
 </script>

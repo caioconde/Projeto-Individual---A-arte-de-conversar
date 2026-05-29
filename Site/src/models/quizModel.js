@@ -22,7 +22,21 @@ function salvarResultado(pontuacao, fkQuiz, fkCompetencia) {
     return database.executar(instrucaoSql);
 }
 
-module.exports = {
-    criarQuiz,
-    salvarResultado
-};
+function buscarResultado(fkUsuario) {
+    var instrucaoSql = ` 
+    SELECT c.nome, rc.pontuacao 
+    FROM resultadoCompetencia rc 
+    JOIN quiz q 
+        ON rc.fkQuiz = q.idQuiz 
+    JOIN competencia c 
+        ON rc.fkCompetencia = c.idCompetencia 
+    WHERE q.fkUsuario = ${fkUsuario} ORDER BY c.idCompetencia;`;
+
+    return database.executar(instrucaoSql);
+}
+
+    module.exports = {
+        criarQuiz,
+        salvarResultado,
+        buscarResultado
+    };

@@ -354,3 +354,27 @@ input {
   height: var(--tamanho-simulador);
   font-size: 23px;
 }
+
+.comprarLivro {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.comprarLivro h2 {
+    font-size: 32px;
+    color: rgb(72, 63, 35);
+}
+
+.comprarLivro img {
+    width: 250px;
+    border-radius: 15px;
+    transition: 0.3s;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.comprarLivro img:hover {
+    transform: scale(1.05);
+}
